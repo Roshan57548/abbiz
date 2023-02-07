@@ -1,0 +1,29 @@
+{
+  "name": "agbiz-backend-main",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.jsx",
+  "scripts": {
+    "start": "nodemon app.js -p 5173",
+    "dev": "nodemon app",
+    "test": "mocha --timeout 10000"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mocha": "^10.2.0",
+    "mongoose": "^6.9.0",
+    "nodemailer": "^6.9.1",
+    "nodemailer-sendgrid-transport": "^0.2.0",
+    "nodemon": "^2.0.20",
+    "sweetalert": "^2.1.2"
+  }
+}

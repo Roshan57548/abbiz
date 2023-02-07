@@ -3,8 +3,8 @@ import "./Registration.css";
 import swal from 'sweetalert';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import dotenv from 'dotenv';
-dotenv.config({path:'../../../config.env'});
+// import dotenv from 'dotenv';
+// dotenv.config({path:'../../../config.env'});
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PermPhoneMsgIcon from '@mui/icons-material/PermPhoneMsg';
@@ -38,10 +38,9 @@ const Registration = () => {
     },
     validationSchema: validate,
     onSubmit: async (values) => {
-
       const {name, email, phone, password, confirm_password} = values;
       console.log(name, email, phone, password, confirm_password)
-      const res = await fetch(`${process.env.REACT_APP_BASE_URL}/registration_user`,{
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/registration_user`,{
         method:"POST",
         headers:{
           "Content-Type":"application/json"

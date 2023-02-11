@@ -1,8 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Iceland&family=Poppins:wght@300&family=Signika:wght@300;400;500&display=swap');
 body
 {
-    background-color: #D6E5F3;
     font-family: 'Signika', sans-serif;
+}
+.form-title{
+    font-size: 30px;
+}
+.giveborder{
+    margin-left: 10%;
+    width: 90%;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    
 }
 .error-part{
     font-size: 12px;
@@ -12,39 +21,48 @@ body
 .registration-page{
     display: flex;
     justify-content: center;
-    margin-bottom: 100px;
 }
-.login-content{
+
+.booking-content{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    padding: 150px 80px;
+    padding: 80px 80px;
     background-color: rgb(255, 254, 254);
     display: flex;
     justify-content: center;
     align-items: center;
-    width: max-content;  
+    width: max-content;
 }
 
 .material-icons-name{
-    font-size: 20px;
+    width: 10%;
+    font-size: 10px;
 }
 
 .form-group{
     margin-bottom: 25px !important;
     width: 350px;
 }
-
+.form-groups{
+    margin-bottom: 25px !important;
+    width: 350px;
+}
+.form-groups .roshan{
+    width: 90%;
+    
+}
 .form-group .roshan{
     width: 80%;
+    
 }
 
-.form-group input{
-    all: unset;
-    border-bottom: 1px solid black;
-    margin-left:15px ;
-    min-width: 200px;
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+}
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
 }
 
-#login{
+#signup{
     all: unset;
     color: white;
     background-color: rgb(87, 143, 211);
@@ -52,27 +70,27 @@ body
     border-radius: 4px;
     cursor:pointer;
 }
-.login-image{
+.signup-image{
     width: 45vw;
     width: 480px;
 }
 
-.login-image img{
+.signup-image img{
     width: 100%;
 }
 
 @media screen and  (max-width:900px) {
-    .login-content{
+    .booking-content{
         flex-direction: column;
         align-items: center;
     }
-    .login-image{
+    .signup-image{
         max-width: 300px;
     }
 }
 
 @media screen and  (max-width:600px) {
-    .login-content{
+    .booking-content{
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
         padding: 50px 10px;
         background-color: rgb(255, 254, 254);
@@ -80,7 +98,6 @@ body
         justify-content: center;
         align-items: center;
         width: 100%;
-        margin-bottom: 60px;
     }
     .material-icons-name{
         font-size: 15px;
@@ -88,14 +105,23 @@ body
     .form-group{
         margin-bottom: 25px !important;
         width: 300px;
-        
     }
     .form-group .roshan{
         width: 80%;
+        
     }
-    .login-image{
+    .form-groups{
+        margin-bottom: 25px !important;
+        width: 300px;
+    }
+    .form-groups .roshan{
+        width: 90%;
+        
+    }
+    .signup-image{
         max-width: 300px;
     }
+    
     .margin-top{
         text-align: center;
         margin-top: 15px;

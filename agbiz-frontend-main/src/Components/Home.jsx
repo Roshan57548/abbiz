@@ -8,8 +8,38 @@ import Img1 from "../assets/Home-1.svg";
 import Img2 from "../assets/Home-2.svg";
 import { Link } from "react-router-dom";
 import ContactForm from "./ContactForm";
-
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import './Home.css';
 const Home = () => {
+
+  const [tabledata, setData] = useState([]);
+  //  activate on loading
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_BASE_URL}/pricingdata`)
+      .then((res) => {
+        setData(res.data["data"]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },[tabledata]);
+
+  let table;
+  if (tabledata) {
+    table = tabledata.map((row, index) => {
+        return (
+              <tr className="table-border">
+                  <td className="px-4 py-3">{row.service}</td>
+                  <td className="px-4 py-3">{row.pricestarting}</td>
+                  <td className="px-4 py-3 text-lg text-white">{row.for}</td>
+              </tr>
+        );
+      });
+  }
+
   return (
     <>
       <Header />
@@ -260,88 +290,7 @@ const Home = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="px-4 py-3">Website Development</td>
-                  <td className="px-4 py-3">Rs 5,999/-</td>
-                  <td className="px-4 py-3 text-lg text-white">One Year</td>
-                </tr>
-                <tr>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    Web-App Development
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    Rs 11,999/-
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3 text-lg text-white">
-                    One Year
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    CRM Software
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    Rs 999/-
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3 text-lg text-white">
-                    User Based
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-t-2 border-b-2 border-gray-800 px-4 py-3">
-                    Digital Marketing
-                  </td>
-                  <td className="border-t-2 border-b-2 border-gray-800 px-4 py-3">
-                    Rs 6,999/-
-                  </td>
-                  <td className="border-t-2 border-b-2 border-gray-800 px-4 py-3 text-lg text-white">
-                    One Month
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    Mobile Application
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    As per Features
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3 text-lg text-white">
-                    One Year
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    Whatsapp API
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    As per Requirement
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3 text-lg text-white">
-                    One Year
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    Website Chatbot
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    As per Requirement
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3 text-lg text-white">
-                    One Year
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    IVR Call Recording
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3">
-                    Recharge Basis
-                  </td>
-                  <td className="border-t-2 border-gray-800 px-4 py-3 text-lg text-white">
-                    One Year
-                  </td>
-                </tr>
+                {table}
               </tbody>
             </table>
           </div>

@@ -13,6 +13,12 @@ const authenticateuser = require("../Middleware/AuthenticateUser");
 require("../Database/Connection");
 // --------Database Registration User Schema --------------
 const user = require("../Models/RegistrationSchema");
+// --------Database Contact Us Schema --------------
+const contactform = require("../Models/ContactUsSchema");
+// --------Database Price Schema --------------
+const pricing = require("../Models/PrizingSchema");
+// --------Database booking Schema --------------
+const booking = require("../Models/BookingSchema");
 
 //  ------------------------------- registration user route ------------------------------------ //
 router.post("/registration_user", async (req, res) => {
@@ -39,6 +45,37 @@ router.post("/registration_user", async (req, res) => {
       }); //make user object
 
       await registered_user.save(); // storing user in database
+      var transporter = nodemailer.createTransport({
+        service: "gmail",
+        port: 465,
+        secure: true,
+        secureConnection: false,
+        auth: {
+          user: "agbizdev01@gmail.com",
+          pass: process.env.PASS,
+        },
+      });
+
+      var option = {
+        from: "agbizdev01@gmail.com",
+        to: email,
+        subject: "Registration Successfull",
+        html: `<div>
+        <p>Dear ${name}</p>
+        <p>Congratulations, your account has been successfully created.</p>
+        <p>If you experience any issues logging into your account, reach out to us at connect@agbiztech.in.</p>
+        <p>Regards,</p>
+        <p><strong>Team AGBIZ</strong></p>
+        </div>`,
+      };
+
+      transporter.sendMail(option, (err, info) => {
+        if (err) {
+          console.log("Error Occurs");
+        } else {
+          console.log("Email sent successfully");
+        }
+      });
       res.status(201).json({ message: "user registered successfully" });
     }
   } catch (err) {
@@ -67,6 +104,7 @@ router.post("/login_user", async (req, res) => {
         res.status(400).json({ error: "Invalid Credential" });
       } else {
         token = await userLogin.generateAuthtoken();
+        console.log(token);
         res.cookie("jwtoken", token, {
           expires: new Date(Date.now() + 5184000),
           httpOnly: true,
@@ -81,51 +119,127 @@ router.post("/login_user", async (req, res) => {
   }
 });
 
-
-//  ------------------------------- user details  route ------------------------------------ //
-router.get("/user/update_details", authenticateuser, (req, res) => {
-  res.send(req.rootUser);
-});
-router.put("/user/update_details", async (req, res) => {
-  const { name, email, phone } = req.body;
-  if (!name || !phone) {
+//  ------------------------------- contact us route ------------------------------------ //
+router.post("/contact_form", async (req, res) => {
+  const { name, companyname, phone } = req.body;
+  if (!name || !companyname || !phone) {
     return res.status(421).json({ error: "All Field are required" });
   }
   try {
-    await user.updateOne({ email: email }, { name, phone, email });
-    res.status(201).json("Document updtaed successfully");
+    const contact_data = new contactform({
+      name,
+      companyname,
+      phone
+    });
+    await contact_data.save();
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 465,
+      secure: true,
+      secureConnection: false,
+      auth: {
+        user: "agbizdev01@gmail.com",
+        pass: process.env.PASS,
+      },
+    });
+
+    var option = {
+      from: "agbizdev01@gmail.com",
+      to: "agbizdev01@gmail.com",
+      subject: `${name} wants to contact you!`,
+      html: `<div>
+      <p>Dear AGBIZ,</p>
+      <p>Kindly contact with <strong>${name}</strong>.</p>
+      <ul>
+          <li>Company <strong>${companyname}</strong></li>
+          <li>Mobile No. <strong>${phone}</strong></li>
+      </ul>
+      <p>Regards,</p>
+      <p><strong>${name}</strong></p>
+      </div>`,
+    };
+
+    transporter.sendMail(option, (err, info) => {
+      if (err) {
+        console.log("Error Occurs");
+      } else {
+        console.log("Email sent successfully");
+      }
+    });
+    res.status(201).json({ message: "message sent successfully" });
   } catch (err) {
     console.log(err);
   }
 });
 
-//  ------------------------------- user details  route ------------------------------------ //
-router.get("/user/add_appointment", authenticateuser, (req, res) => {
-  res.send(req.rootUser);
+// <--------------------------- find pricing data --------------------->
+router.get("/pricingdata", async (req, res) => {
+  try {
+    const result = await pricing.find();
+    res.status(201).json({ data: result });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-//  ------------------------------- logout user route ------------------------------------ //
+//  ------------------------------- booking user route ------------------------------------ //
+router.post("/booking", async (req, res) => {
+  const { name, companyname, phone, date, time, product, service, message } = req.body;
+  if (!name || !companyname || !phone || !date || !time || !product ) {
+    return res.status(421).json({ error: "All Field are required" });
+  }
 
-router.get("/user/logout", (req, res) => {
-  res.clearCookie("jwtoken", { path: "/" });
-  res.status(200).json({ message: "logged out succesfully" });
+  try {
+      const booking_user = new booking({
+        name, companyname, phone, date, time, product, service, message
+      });
+
+      await booking_user.save();
+      var transporter = nodemailer.createTransport({
+        service: "gmail",
+        port: 465,
+        secure: true,
+        secureConnection: false,
+        auth: {
+          user: "agbizdev01@gmail.com",
+          pass: process.env.PASS,
+        },
+      });
+  
+      var option = {
+        from: "agbizdev01@gmail.com",
+        to: "agbizdev01@gmail.com",
+        subject: `Product & Service Booked`,
+        html: `<div>
+        <p>Dear AGBIZ,</p>
+        <p>Kindly contact with <strong>${name}</strong>.</p>
+        <ul>
+            <li>Company : <strong>${companyname}</strong></li>
+            <li>Mobile No. : <strong>${phone}</strong></li>
+            <li>Date : <strong>${date}</strong></li>
+            <li>Time : <strong>${time}</strong></li>
+            <li>Product & Service : <strong>${product}</strong></li>
+            <li>Other Services : <strong>${service}</strong></li>
+            <li>Message : <strong>${message}</strong></li>
+        </ul>
+        <p>Regards,</p>
+        <p><strong>${name}</strong></p>
+        </div>`,
+      };
+  
+      transporter.sendMail(option, (err, info) => {
+        if (err) {
+          console.log("Error Occurs");
+        } else {
+          console.log("Email sent successfully");
+        }
+      });
+      res.status(201).json({ message: "user registered successfully" });
+    }
+  catch (err) {
+    console.log(err);
+  }
 });
-
-// <-------------------------- route to check user login ------------------>
-
-router.get("/checkuserlogin", authenticateuser, async (req, res) => {
-  res.send(req.rootUser);
-});
-
-
-
-// <-------------------------- get current logged user --------------------->
-
-router.get("/user/logged", authenticateuser, (req, res) => {
-  res.json({ user: req.rootUser });
-});
-
-
 
 
 
